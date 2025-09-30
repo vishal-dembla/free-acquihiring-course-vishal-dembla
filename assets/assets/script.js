@@ -1,16 +1,18 @@
+// ===== Brand-independent logic; change only the chapters array below =====
 const chapters = [
-  { slug: "chapter1",  title: "Chapter 1 — Introduction & Why This Matters" },
-  { slug: "chapter2",  title: "Chapter 2 — Core Concepts & Vocabulary" },
-  { slug: "chapter3",  title: "Chapter 3 — Market Landscape & Case Studies" },
-  { slug: "chapter4",  title: "Chapter 4 — Legal & Compliance Basics" },
-  { slug: "chapter5",  title: "Chapter 5 — Sourcing & Diligence" },
-  { slug: "chapter6",  title: "Chapter 6 — Financials, Valuation & Offers" },
-  { slug: "chapter7",  title: "Chapter 7 — Integration Playbooks" },
-  { slug: "chapter8",  title: "Chapter 8 — Risks, Failure Patterns & Fixes" },
-  { slug: "chapter9",  title: "Chapter 9 — Templates, Tools & Checklists" },
-  { slug: "chapter10", title: "Chapter 10 — Capstone, References & Next Steps" },
+  { slug: "chapter1",  title: "Chapter 1 — Why Acquihiring in India & When It Makes Sense" },
+  { slug: "chapter2",  title: "Chapter 2 — Deal Models: Acquihire-Only, Asset/Share Deals, Team Lift-Outs" },
+  { slug: "chapter3",  title: "Chapter 3 — Legal & Compliance: Companies Act, Labor, IP, ESOP Transfer, Cross-Border" },
+  { slug: "chapter4",  title: "Chapter 4 — Valuation & Deal Economics: Offers, Buyouts, Retention, Earn-outs" },
+  { slug: "chapter5",  title: "Chapter 5 — Diligence Playbook: Tech, Culture, Finance, HR, Risks" },
+  { slug: "chapter6",  title: "Chapter 6 — Negotiation & Term Sheets: Key Clauses, Warranties, Pitfalls" },
+  { slug: "chapter7",  title: "Chapter 7 — Integration: HR Ops, Payroll Migration, ESOP Mapping, Onboarding" },
+  { slug: "chapter8",  title: "Chapter 8 — India Case Studies: What Worked, What Failed, Why" },
+  { slug: "chapter9",  title: "Chapter 9 — Toolkits & Templates: Checklists, Emails, FAQs" },
+  { slug: "chapter10", title: "Chapter 10 — Getting Started: Glossary, References, Next Steps" },
 ];
 
+// ---------- Helpers ----------
 function buildSidebar(containerSelector, activeSlug) {
   const el = document.querySelector(containerSelector);
   if (!el) return;
@@ -89,3 +91,4 @@ document.addEventListener('DOMContentLoaded', () => {
   wireHomePage();
   wireChapterPage();
 });
+
