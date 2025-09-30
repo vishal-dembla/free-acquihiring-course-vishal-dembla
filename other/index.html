@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>About & Updates – Your Course</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <a class="brand__logo" href="../index.html" aria-label="Home"></a>
+      <a class="brand__title" href="../index.html">Your Course</a>
+    </div>
+    <nav class="navlinks">
+      <a href="../index.html">Home</a>
+      <a href="../chapter1/">Start Course</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h1>About & Updates</h1>
+    <p class="byline">What this course covers and change log.</p>
+
+    <h2>About</h2>
+    <p>Short description here.</p>
+
+    <h2>Updates</h2>
+    <ul>
+      <li>v1.0 — initial release.</li>
+    </ul>
+
+    <footer id="siteFooter" class="site-footer">
+      <div class="footer-meta">
+        <span>© <span id="y"></span> Your Brand</span>
+        <a href="#">Back to top</a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="../assets/script.js"></script>
+  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+</body>
+</html>
