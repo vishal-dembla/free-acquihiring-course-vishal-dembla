@@ -111,3 +111,4 @@ tr:nth-child(even) td{background:#fbfbfd}
   .docgrid{grid-template-columns:1fr}
   .lefttoc,.righttoc{position:relative;top:0;height:auto;border:0;padding:0;margin-bottom:12px}
 }
+
