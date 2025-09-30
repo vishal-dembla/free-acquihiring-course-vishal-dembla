@@ -91,4 +91,24 @@ document.addEventListener('DOMContentLoaded', () => {
   wireHomePage();
   wireChapterPage();
 });
+/* -------- Sidebar + Navigation already set up earlier -------- */
+
+/* -------- Quiz: toggle answers -------- */
+document.addEventListener('DOMContentLoaded', () => {
+  const answers = document.querySelectorAll('.quiz-answer');
+  answers.forEach(ans => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = 'Show answer';
+    btn.className = 'quiz-toggle';
+    btn.addEventListener('click', () => {
+      const visible = ans.style.display !== 'none';
+      ans.style.display = visible ? 'none' : 'block';
+      btn.textContent = visible ? 'Show answer' : 'Hide answer';
+    });
+    ans.parentNode.insertBefore(btn, ans);
+    ans.style.display = 'none'; // hidden by default
+  });
+});
+
 
