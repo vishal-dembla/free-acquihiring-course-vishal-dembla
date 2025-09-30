@@ -1,9 +1,9 @@
 /* =========================================================
-   Docs shell: chapters, sidebar, prev/next, relative links,
-   and quiz answer toggles (shadcn-docs style, no framework).
+   shadcn-docs inspired shell: build sidebars, "on this page",
+   prev/next, and quiz toggles. Works with plain HTML.
    ========================================================= */
 
-const chapters = [
+const CHAPTERS = [
   { slug: "chapter1",  title: "Chapter 1 — Why Acquihiring in India & When It Makes Sense" },
   { slug: "chapter2",  title: "Chapter 2 — Deal Models: Acquihire-Only, Asset/Share Deals, Team Lift-Outs" },
   { slug: "chapter3",  title: "Chapter 3 — Legal & Compliance: Companies Act, Labor, IP, ESOP Transfer, Cross-Border" },
@@ -16,115 +16,117 @@ const chapters = [
   { slug: "chapter10", title: "Chapter 10 — Getting Started: Glossary, References, Next Steps" },
 ];
 
-/* ---------- Helpers ---------- */
-function buildSidebar(containerSelector, activeSlug) {
-  const el = document.querySelector(containerSelector);
-  if (!el) return;
+/* Helpers */
+const bySel = (s,root=document)=>root.querySelector(s);
+const byAll = (s,root=document)=>Array.from(root.querySelectorAll(s));
+
+function currentSlug() {
+  const path = window.location.pathname.replace(/\/+$/,'');
+  const m = path.match(/\/(chapter\d+)(?:\/index\.html)?$/i);
+  return m ? m[1] : null;
+}
+
+/* Build left sidebar chapter list */
+function buildLeftTOC(activeSlug, prefix) {
+  const box = bySel('#leftTOC');
+  if (!box) return;
   const ul = document.createElement('ul');
   ul.className = 'toc';
-  chapters.forEach(ch => {
+  CHAPTERS.forEach(ch => {
     const li = document.createElement('li');
     const a = document.createElement('a');
-    a.href = `${ch.slug}/`;
+    a.href = `${prefix}${ch.slug}/`;
     a.textContent = ch.title;
     if (ch.slug === activeSlug) a.classList.add('active');
-    li.appendChild(a);
-    ul.appendChild(li);
+    li.appendChild(a); ul.appendChild(li);
   });
-  el.innerHTML = '';
-  el.appendChild(ul);
+  box.innerHTML = '<h4>Sections</h4>';
+  box.appendChild(ul);
 }
 
-function prefixLinks(container, prefix) {
-  if (!container) return;
-  container.querySelectorAll('a[href]').forEach(a => {
-    const href = a.getAttribute('href') || '';
-    if (href.startsWith('./') || href.startsWith('../')) return;
-    if (/^https?:\/\//i.test(href)) return;
-    if (href.startsWith('#')) return;
-    a.setAttribute('href', prefix + href);
+/* Build right "On this page" (H2 anchors) */
+function buildRightTOC(prefixForLocal) {
+  const box = bySel('#rightTOC');
+  if (!box) return;
+  const heads = byAll('.content h2');
+  if (!heads.length){ box.innerHTML=''; return; }
+  const ul = document.createElement('ul');
+  heads.forEach(h => {
+    if (!h.id) h.id = h.textContent.trim().toLowerCase().replace(/[^\w]+/g,'-');
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = `${prefixForLocal}#${h.id}`;
+    a.textContent = h.textContent;
+    li.appendChild(a); ul.appendChild(li);
+  });
+  box.innerHTML = '<h4>On this page</h4>';
+  box.appendChild(ul);
+}
+
+/* Prev/Next buttons */
+function wirePrevNext(activeSlug, prefix) {
+  const idx = CHAPTERS.findIndex(c => c.slug === activeSlug);
+  if (idx < 0) return;
+  const prevBtn = bySel('#prevLink');
+  const nextBtn = bySel('#nextLink');
+  if (prevBtn && CHAPTERS[idx-1]) {
+    prevBtn.href = `${prefix}${CHAPTERS[idx-1].slug}/`;
+    prevBtn.textContent = `← ${CHAPTERS[idx-1].title}`;
+  }
+  if (nextBtn && CHAPTERS[idx+1]) {
+    nextBtn.href = `${prefix}${CHAPTERS[idx+1].slug}/`;
+    nextBtn.textContent = `${CHAPTERS[idx+1].title} →`;
+  }
+}
+
+/* Quiz toggles */
+function wireQuiz(){
+  byAll('.quiz-answer').forEach(ans=>{
+    if (ans.dataset.wired === '1') return; // avoid double
+    ans.dataset.wired = '1';
+    const btn = document.createElement('button');
+    btn.type='button'; btn.className='quiz-toggle'; btn.textContent='Show answer';
+    btn.addEventListener('click',()=>{
+      const open = ans.style.display !== 'none';
+      ans.style.display = open ? 'none':'block';
+      btn.textContent = open ? 'Show answer':'Hide answer';
+    });
+    ans.style.display='none';
+    ans.parentNode.insertBefore(btn, ans);
   });
 }
 
-/* ---------- Page wiring ---------- */
-function wireChapterPage() {
-  const path = window.location.pathname.replace(/\/+$/, '');
-  const match = path.match(/\/(chapter\d+)(?:\/index\.html)?$/i);
-  if (!match) return;
-  const slug = match[1];
-  const idx = chapters.findIndex(c => c.slug === slug);
-  if (idx === -1) return;
-
-  // Auto H1 if empty
-  const h1 = document.querySelector('h1[data-auto-title]');
-  if (h1 && !h1.textContent.trim()) h1.textContent = chapters[idx].title;
-
-  buildSidebar('#sidebar', slug);
-  prefixLinks(document.querySelector('#sidebar'), '../');
-
-  // Prev/Next
-  const prev = idx > 0 ? chapters[idx - 1] : null;
-  const next = idx < chapters.length - 1 ? chapters[idx + 1] : null;
-  const prevLink = document.querySelector('#prevLink');
-  const nextLink = document.querySelector('#nextLink');
-  if (prev && prevLink) { prevLink.href = `../${prev.slug}/`; prevLink.querySelector('span').textContent = prev.title; }
-  if (next && nextLink) { nextLink.href = `../${next.slug}/`; nextLink.querySelector('span').textContent = next.title; }
-
-  // Home links
-  document.querySelectorAll('a[data-home]').forEach(a => a.setAttribute('href', '../index.html'));
-
-  // Footer internal links
-  prefixLinks(document.querySelector('#siteFooter'), '../');
-
-  // Quiz toggles for this page
-  initQuizToggles();
-}
-
-function wireHomePage() {
-  if (!/\/(index\.html)?$/.test(window.location.pathname)) return;
-  buildSidebar('#sidebar', null);
-  prefixLinks(document.querySelector('#sidebar'), './');
-
-  const list = document.querySelector('#chapterList');
-  if (list) {
-    chapters.forEach(ch => {
-      const li = document.createElement('li');
-      li.innerHTML = `<a class="btn" href="./${ch.slug}/">${ch.title}</a>`;
+/* Home page: inject chapter list */
+function wireHome(){
+  if (!/\/(index\.html)?$/.test(location.pathname)) return false;
+  buildLeftTOC(null, './');
+  buildRightTOC(''); // optional
+  const list = bySel('#chapterList');
+  if (list){
+    CHAPTERS.forEach(ch=>{
+      const li=document.createElement('li');
+      li.innerHTML = `<a class="navbtn" href="./${ch.slug}/">${ch.title}</a>`;
       list.appendChild(li);
     });
   }
-
-  // Footer links from home
-  prefixLinks(document.querySelector('#siteFooter'), './');
-
-  // Quiz toggles (in case you add quizzes to home)
-  initQuizToggles();
+  wireQuiz();
+  return true;
 }
 
-/* ---------- Quiz: click-to-reveal answers ---------- */
-function initQuizToggles(){
-  const answers = document.querySelectorAll('.quiz-answer');
-  answers.forEach(ans => {
-    // don't double-add
-    if (ans.dataset.wired === '1') return;
-    ans.dataset.wired = '1';
-
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.textContent = 'Show answer';
-    btn.className = 'quiz-toggle';
-    btn.addEventListener('click', () => {
-      const visible = ans.style.display !== 'none';
-      ans.style.display = visible ? 'none' : 'block';
-      btn.textContent = visible ? 'Show answer' : 'Hide answer';
-    });
-    ans.parentNode.insertBefore(btn, ans);
-    ans.style.display = 'none';
-  });
+/* Chapter page wiring */
+function wireChapter(){
+  const slug = currentSlug();
+  if (!slug) return false;
+  buildLeftTOC(slug, '../');
+  buildRightTOC('');         // local anchors
+  wirePrevNext(slug, '../');
+  byAll('a[data-home]').forEach(a=>a.href='../index.html');
+  wireQuiz();
+  return true;
 }
 
-/* ---------- Boot ---------- */
-document.addEventListener('DOMContentLoaded', () => {
-  wireHomePage();
-  wireChapterPage();
+/* Boot */
+document.addEventListener('DOMContentLoaded', ()=>{
+  if (wireHome()) return;
+  wireChapter();
 });
