@@ -1,129 +1,114 @@
 /* =========================================================
-   shadcn-docs inspired base: clean system fonts, neutral grays,
-   generous spacing, and "prose" defaults for long-form content.
+   shadcn/ui docs–style static clone (no Tailwind, no React)
+   Layout: topbar + left toc + content + right "on this page"
    ========================================================= */
 
-/* ---- CSS Variables (light theme) ---- */
+/* Theme tokens (light) */
 :root{
-  --bg: #ffffff;
-  --fg: #0f172a;          /* slate-900 */
-  --fg-muted:#1f2937;     /* slate-800 */
-  --muted:#6b7280;        /* slate-500 */
-  --line:#e5e7eb;         /* slate-200 */
-  --panel:#f9fafb;        /* slate-50 */
-  --panel-2:#f3f4f6;      /* slate-100 */
-  --brand:#111827;        /* near-black brand dot */
-  --link:#0f172a;         /* links are dark but underlined on hover */
-  --accent:#0ea5e9;       /* sky-500 for callouts */
-  --callout-bg:#eff6ff;   /* sky-50 */
-  --callout-fg:#0c4a6e;   /* sky-900 */
+  --bg:#ffffff;
+  --card:#0b0f1a;           /* topbar icon */
+  --fg:#0f172a;             /* slate-900 */
+  --muted:#475569;          /* slate-600 */
+  --line:#e5e7eb;           /* slate-200 */
+  --panel:#f8fafc;          /* slate-50 */
+  --panel-2:#f1f5f9;        /* slate-100 */
+  --link:#0f172a;
+  --callout-bg:#eff6ff;     /* sky-50 */
+  --callout-border:#0ea5e9; /* sky-500 */
+  --callout-fg:#0c4a6e;     /* sky-900 */
 }
 
-/* ---- Reset-ish ---- */
+/* Base */
 *{box-sizing:border-box}
-html,body{margin:0;padding:0}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--fg)}
 img{max-width:100%;height:auto}
-
-/* ---- Typography ---- */
-body{
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  font-size:16.5px; line-height:1.7; color:var(--fg); background:var(--bg);
-  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
-}
-
-h1,h2,h3,h4{color:var(--fg); margin:0 0 .6rem}
-h1{font-size:2rem;font-weight:700;letter-spacing:-.01em}
-h2{font-size:1.5rem;font-weight:650;margin-top:2rem}
-h3{font-size:1.2rem;font-weight:600;margin-top:1.4rem}
-
-p,ul,ol,table,blockquote,pre{color:var(--fg-muted); margin:0 0 1rem}
-small,.byline{color:var(--muted)}
-
 a{color:var(--link);text-decoration:none}
 a:hover{text-decoration:underline}
 
-/* ---- Page chrome ---- */
-.container{max-width:1160px;margin:0 auto;padding:24px}
+body{
+  font:16px/1.7 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+
+/* Topbar (shadcn style) */
 .topbar{
-  position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;
-  padding:12px 20px;background:var(--bg);border-bottom:1px solid var(--line)
+  position:sticky; top:0; z-index:50;
+  display:flex; align-items:center; gap:16px;
+  height:64px; padding:0 20px; background:#fff; border-bottom:1px solid var(--line);
 }
-.brand{display:flex;align-items:center;gap:10px}
-.brand__logo{width:28px;height:28px;border-radius:8px;background:var(--brand)}
-.brand__title{font-weight:700}
+.brand-dot{width:28px;height:28px;border-radius:8px;background:var(--card);}
+.brand-title{font-weight:700; letter-spacing:.2px;}
+.toplinks{margin-left:auto; display:flex; gap:14px; font-size:14px; color:var(--muted);}
+.toplinks a{color:var(--fg);}
 
-/* ---- 2-col docs layout ---- */
-.layout{display:grid;grid-template-columns:260px minmax(0,1fr);gap:24px;padding-top:12px}
-.sidebar{
-  position:sticky;top:64px;height:calc(100vh - 64px);overflow:auto;border-right:1px solid var(--panel-2);
-  padding-right:16px;background:var(--bg);z-index:1
-}
-.sidebar h3{font-size:.8rem;text-transform:uppercase;color:var(--muted);margin:4px 0 8px}
-.toc{list-style:none;margin:0;padding:0}
-.toc li{margin:6px 0}
-.toc a{display:block;padding:6px 8px;border-radius:8px}
-.toc a:hover,.toc a.active{background:var(--panel-2);text-decoration:none}
-
-.content{min-width:0;padding:4px 2px 64px} /* critical min-width to prevent overlap */
-
-/* ---- "Prose" defaults (shadcn docs feel) ---- */
-.prose p{margin:0 0 1rem}
-.prose h2{margin-top:2.2rem}
-.prose ul{padding-left:1.2rem}
-.prose li{margin:.3rem 0}
-.prose blockquote{
-  border-left:3px solid var(--panel-2);margin:1.3rem 0;padding:.6rem 1rem;background:var(--panel)
+/* Doc grid: left toc / main / right toc */
+.docgrid{
+  max-width:1240px; margin:0 auto; padding:20px;
+  display:grid; grid-template-columns: 260px minmax(0,1fr) 220px; gap:24px;
 }
 
-/* ---- Cards/Buttons ---- */
-.btn{
-  display:inline-flex;align-items:center;gap:8px;padding:.55rem .9rem;border:1px solid var(--line);
-  border-radius:10px;background:var(--panel);color:var(--fg);font-weight:600
-}
-.btn:hover{background:var(--panel-2);text-decoration:none}
+/* Left TOC */
+.lefttoc{position:sticky; top:80px; height:calc(100vh - 88px); overflow:auto; padding-right:10px; border-right:1px solid var(--panel-2);}
+.lefttoc h4{margin:10px 0 8px; font-size:12px; text-transform:uppercase; color:var(--muted);}
+.toc{list-style:none; margin:0; padding:0;}
+.toc li{margin:6px 0;}
+.toc a{display:block; padding:6px 10px; border-radius:8px;}
+.toc a:hover,.toc a.active{background:var(--panel-2); text-decoration:none}
 
-/* Chapter list on home */
-#chapterList{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
-#chapterList a.btn{width:100%}
+/* Main content */
+.content{min-width:0; padding:4px 2px 64px;}
+.content .prose p{margin:0 0 1rem;}
+.content .prose h1{font-size:28px; font-weight:700; margin:12px 0 10px;}
+.content .prose h2{font-size:22px; font-weight:650; margin:26px 0 12px;}
+.content .prose h3{font-size:18px; font-weight:600; margin:18px 0 8px;}
+.content .lead{color:var(--muted);}
 
-/* ---- Prev/Next bar ---- */
-.chapter-nav{
-  display:flex;gap:12px;justify-content:space-between;margin-top:24px;padding-top:14px;border-top:1px solid var(--line)
-}
-.chapter-nav .btn{flex:1 1 0;max-width:48%;white-space:normal}
+/* Right "On this page" */
+.righttoc{position:sticky; top:80px; height:calc(100vh - 88px); overflow:auto; border-left:1px solid var(--panel-2); padding-left:14px;}
+.righttoc h4{margin:10px 0 8px; font-size:12px; text-transform:uppercase; color:var(--muted);}
+.righttoc ul{list-style:none; margin:0; padding:0;}
+.righttoc li{margin:6px 0;}
+.righttoc a{color:var(--muted); font-size:14px;}
+.righttoc a:hover{color:var(--fg); text-decoration:none}
 
-/* ---- Callouts (Definition, Notes) ---- */
+/* Callouts */
 .callout{
-  background:var(--callout-bg);color:var(--callout-fg);
-  border-left:4px solid var(--accent);
-  padding:12px 14px;border-radius:8px;margin:16px 0
+  background:var(--callout-bg); color:var(--callout-fg);
+  border-left:4px solid var(--callout-border);
+  padding:12px 14px; border-radius:8px; margin:16px 0;
 }
 
-/* ---- Tables ---- */
-table{width:100%;border-collapse:collapse;margin:1.4rem 0;font-size:.98rem}
-th,td{border:1px solid var(--line);padding:.75rem;text-align:left;vertical-align:top}
-th{background:var(--panel);font-weight:600}
+/* Tables */
+table{width:100%; border-collapse:collapse; margin:1.2rem 0; font-size:.96rem;}
+th,td{border:1px solid var(--line); padding:.7rem; text-align:left; vertical-align:top;}
+th{background:var(--panel); font-weight:600;}
 tr:nth-child(even) td{background:#fbfbfd}
 
-/* ---- Quiz ---- */
-.quiz-answer{display:none;margin-top:.35rem;font-style:italic;color:#525252}
+/* Prev / Next */
+.navbar{
+  display:flex; justify-content:space-between; gap:12px;
+  margin-top:28px; padding-top:16px; border-top:1px solid var(--line);
+}
+.navbtn{
+  flex:1 1 0; max-width:48%; white-space:normal;
+  display:block; padding:10px 12px; border:1px solid var(--line); border-radius:10px; background:var(--panel);
+  font-weight:600; text-align:center;
+}
+.navbtn:hover{background:var(--panel-2); text-decoration:none}
+
+/* Quiz (click-to-reveal) */
+.quiz-answer{display:none; margin-top:.35rem; font-style:italic; color:#525252;}
 .quiz-toggle{
-  margin-top:6px;padding:.38rem .6rem;border:1px solid var(--line);border-radius:8px;
-  background:var(--panel);cursor:pointer;font-size:.92rem;font-weight:500
+  margin-top:6px; padding:.38rem .6rem; border:1px solid var(--line); border-radius:8px;
+  background:var(--panel); cursor:pointer; font-size:.92rem; font-weight:500;
 }
 .quiz-toggle:hover{background:var(--panel-2)}
 
-/* ---- Footer ---- */
-.site-footer{border-top:1px solid var(--panel-2);margin-top:40px;padding:24px 0 14px}
-.footer-grid{display:grid;gap:18px;grid-template-columns:repeat(4,minmax(0,1fr))}
-.footer-col h4{margin:0 0 8px;font-size:.95rem;color:#374151}
-.footer-links{list-style:none;margin:0;padding:0}
-.footer-links li{margin:6px 0}
-.footer-meta{margin-top:18px;color:var(--muted);font-size:.9rem;display:flex;justify-content:space-between;align-items:center}
+/* Footer */
+.footer{border-top:1px solid var(--panel-2); margin-top:40px; padding:20px 0 16px; color:var(--muted); font-size:.92rem}
 
-/* ---- Small screens ---- */
-@media (max-width:900px){
-  .layout{grid-template-columns:1fr}
-  .sidebar{position:relative;top:0;height:auto;border-right:none;padding-right:0}
-  .footer-grid{grid-template-columns:1fr 1fr}
+/* Small screens */
+@media (max-width:1024px){
+  .docgrid{grid-template-columns: 1fr; }
+  .lefttoc,.righttoc{position:relative; top:0; height:auto; border:0; padding:0; margin-bottom:12px;}
 }
