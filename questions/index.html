@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Questions Hub – Your Course</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <a class="brand__logo" href="../index.html" aria-label="Home"></a>
+      <a class="brand__title" href="../index.html">Your Course</a>
+    </div>
+    <nav class="navlinks">
+      <a href="../index.html">Home</a>
+      <a href="../chapter1/">Start Course</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h1>Questions Hub</h1>
+    <p class="byline">Answers to common queries.</p>
+
+    <h2>Frequently asked</h2>
+    <ul>
+      <li>Q1 — short answer.</li>
+      <li>Q2 — short answer.</li>
+    </ul>
+
+    <h2 id="ask">Submit a question</h2>
+    <p>Link this to your form of choice (Google Form, Typeform). For now: <a href="mailto:hello@example.com">hello@example.com</a></p>
+
+    <footer id="siteFooter" class="site-footer">
+      <div class="footer-meta">
+        <span>© <span id="y"></span> Your Brand</span>
+        <a href="#">Back to top</a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="../assets/script.js"></script>
+  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+</body>
+</html>
