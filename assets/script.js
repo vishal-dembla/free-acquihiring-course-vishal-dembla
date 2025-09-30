@@ -1,4 +1,8 @@
-// ===== Brand-independent logic; change only the chapters array below =====
+/* =========================================================
+   Docs shell: chapters, sidebar, prev/next, relative links,
+   and quiz answer toggles (shadcn-docs style, no framework).
+   ========================================================= */
+
 const chapters = [
   { slug: "chapter1",  title: "Chapter 1 — Why Acquihiring in India & When It Makes Sense" },
   { slug: "chapter2",  title: "Chapter 2 — Deal Models: Acquihire-Only, Asset/Share Deals, Team Lift-Outs" },
@@ -12,7 +16,7 @@ const chapters = [
   { slug: "chapter10", title: "Chapter 10 — Getting Started: Glossary, References, Next Steps" },
 ];
 
-// ---------- Helpers ----------
+/* ---------- Helpers ---------- */
 function buildSidebar(containerSelector, activeSlug) {
   const el = document.querySelector(containerSelector);
   if (!el) return;
@@ -20,14 +24,15 @@ function buildSidebar(containerSelector, activeSlug) {
   ul.className = 'toc';
   chapters.forEach(ch => {
     const li = document.createElement('li');
-    const a  = document.createElement('a');
-    a.href = `${ch.slug}/`; // will be prefixed below
+    const a = document.createElement('a');
+    a.href = `${ch.slug}/`;
     a.textContent = ch.title;
     if (ch.slug === activeSlug) a.classList.add('active');
     li.appendChild(a);
     ul.appendChild(li);
   });
-  el.innerHTML = ''; el.appendChild(ul);
+  el.innerHTML = '';
+  el.appendChild(ul);
 }
 
 function prefixLinks(container, prefix) {
@@ -41,32 +46,38 @@ function prefixLinks(container, prefix) {
   });
 }
 
+/* ---------- Page wiring ---------- */
 function wireChapterPage() {
   const path = window.location.pathname.replace(/\/+$/, '');
   const match = path.match(/\/(chapter\d+)(?:\/index\.html)?$/i);
-  if (!match) return; // not a chapter
+  if (!match) return;
   const slug = match[1];
   const idx = chapters.findIndex(c => c.slug === slug);
   if (idx === -1) return;
 
+  // Auto H1 if empty
   const h1 = document.querySelector('h1[data-auto-title]');
   if (h1 && !h1.textContent.trim()) h1.textContent = chapters[idx].title;
 
   buildSidebar('#sidebar', slug);
   prefixLinks(document.querySelector('#sidebar'), '../');
 
+  // Prev/Next
   const prev = idx > 0 ? chapters[idx - 1] : null;
   const next = idx < chapters.length - 1 ? chapters[idx + 1] : null;
-
   const prevLink = document.querySelector('#prevLink');
   const nextLink = document.querySelector('#nextLink');
   if (prev && prevLink) { prevLink.href = `../${prev.slug}/`; prevLink.querySelector('span').textContent = prev.title; }
   if (next && nextLink) { nextLink.href = `../${next.slug}/`; nextLink.querySelector('span').textContent = next.title; }
 
+  // Home links
   document.querySelectorAll('a[data-home]').forEach(a => a.setAttribute('href', '../index.html'));
 
-  // Footer internal links (glossary, questions, etc.) should be relative from chapter
+  // Footer internal links
   prefixLinks(document.querySelector('#siteFooter'), '../');
+
+  // Quiz toggles for this page
+  initQuizToggles();
 }
 
 function wireHomePage() {
@@ -85,18 +96,19 @@ function wireHomePage() {
 
   // Footer links from home
   prefixLinks(document.querySelector('#siteFooter'), './');
+
+  // Quiz toggles (in case you add quizzes to home)
+  initQuizToggles();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  wireHomePage();
-  wireChapterPage();
-});
-/* -------- Sidebar + Navigation already set up earlier -------- */
-
-/* -------- Quiz: toggle answers -------- */
-document.addEventListener('DOMContentLoaded', () => {
+/* ---------- Quiz: click-to-reveal answers ---------- */
+function initQuizToggles(){
   const answers = document.querySelectorAll('.quiz-answer');
   answers.forEach(ans => {
+    // don't double-add
+    if (ans.dataset.wired === '1') return;
+    ans.dataset.wired = '1';
+
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.textContent = 'Show answer';
@@ -107,8 +119,12 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.textContent = visible ? 'Show answer' : 'Hide answer';
     });
     ans.parentNode.insertBefore(btn, ans);
-    ans.style.display = 'none'; // hidden by default
+    ans.style.display = 'none';
   });
+}
+
+/* ---------- Boot ---------- */
+document.addEventListener('DOMContentLoaded', () => {
+  wireHomePage();
+  wireChapterPage();
 });
-
-
