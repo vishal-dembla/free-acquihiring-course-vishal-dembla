@@ -1,1 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Your Course – Home</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand__logo" aria-hidden="true"></div>
+      <div class="brand__title">Your Course</div>
+    </div>
+    <nav class="navlinks">
+      <a href="./index.html">Home</a>
+      <a href="./chapter1/">Start Course</a>
+      <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </header>
+
+  <div class="container layout">
+    <aside class="sidebar" id="sidebar">
+      <h3>Chapters</h3>
+      <!-- auto -->
+    </aside>
+
+    <main class="content">
+      <h1>Welcome</h1>
+      <p class="byline">A chapter-by-chapter course with docs-style UX.</p>
+
+      <div class="callout">
+        Titles & order are controlled once in <code>assets/script.js</code>. Paste your content into each chapter file.
+      </div>
+
+      <h2>Start Learning</h2>
+      <ul id="chapterList" style="list-style:none; padding-left:0; display:flex; flex-direction:column; gap:10px;"></ul>
+
+      <!-- Global footer -->
+      <footer id="siteFooter" class="site-footer">
+        <div class="footer-grid">
+          <div class="footer-col">
+            <h4>Glossary</h4>
+            <ul class="footer-links">
+              <li><a href="glossary/">Browse A–Z terms</a></li>
+              <li><a href="glossary/#popular">Popular definitions</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Questions Hub</h4>
+            <ul class="footer-links">
+              <li><a href="questions/">Common questions</a></li>
+              <li><a href="questions/#ask">Submit a question</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>References</h4>
+            <ul class="footer-links">
+              <li><a href="references/">Reading list</a></li>
+              <li><a href="references/#citations">Citations</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Other</h4>
+            <ul class="footer-links">
+              <li><a href="other/">About & updates</a></li>
+              <li><a href="chapter1/">Start Chapter 1</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-meta">
+          <span>© <span id="y"></span> Your Brand</span>
+          <a href="#">Back to top</a>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <script src="assets/script.js"></script>
+  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+</body>
+</html>
 
